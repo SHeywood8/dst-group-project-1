@@ -3,6 +3,7 @@
 ## Project Group
 
 - Vivek Paligadu (mn21313)
+- Sheridan Heywood (ym21803)
 
 ## Reading order and requirements
 
