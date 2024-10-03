@@ -2,9 +2,8 @@
 
 ## Project Group
 
-- Sheridan Heywood (ym21803)
 - Vivek Paligadu (mn21313)
-- Eli Miller (fp21952)
+- Sheridan Heywood (ym21803)
 
 ## Reading order and requirements
 
