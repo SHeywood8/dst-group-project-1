@@ -4,6 +4,7 @@
 
 - Vivek Paligadu (mn21313)
 - Sheridan Heywood (ym21803)
+- Eli Miller (fp21952)
 
 ## Reading order and requirements
 
