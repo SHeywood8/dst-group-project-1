@@ -14,8 +14,13 @@ All report content is in the directory:
 
 The report takes the following structure:
 
-* 01-Introduction.Rmd
-* 02-Data.Rmd
+* 01-Introduction.ipynb
+* 02-EDA.ipynb
+* 03-DiscriminantAnalysis.ipynb
+* 04-LogisticRegression.ipynb
+* 05-KNNorSVM.ipynb
+* 06-DecisionTrees.ipynb
+* 07-Conclusion.ipynb
 
 Pdf output of the Rmd content is included for convenience.
 
