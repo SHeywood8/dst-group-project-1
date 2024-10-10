@@ -1,2 +1,8 @@
+json
+matplotlib
+numpy
+pandas
+re
+seaborn
+subprocess
 ucimlrepo
-scikit-learn
