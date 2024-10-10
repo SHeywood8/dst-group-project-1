@@ -22,8 +22,6 @@ The report takes the following structure:
 * 06-DecisionTrees.ipynb
 * 07-Conclusion.ipynb
 
-Pdf output of the Rmd content is included for convenience.
-
 ### Requirements:
 
 
