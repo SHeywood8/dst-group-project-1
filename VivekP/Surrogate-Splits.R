@@ -20,7 +20,7 @@ library(rpart)
 train_data[train_data == "?"] <- NA
 
 # Fit the classification tree using rpart with NA handling
-fit <- rpart(income ~ ., data = train_data, method = "class", control = rpart.control(cp = 0))
+fit <- rpart(income ~ ., data = train_data, method = "class", control = rpart.control(cp = 1e-6))
 
 # Get the cost-complexity pruning table
 cptable <- fit$cptable
