@@ -46,7 +46,7 @@ train_data <- cbind(X_train, y_train)
 
 We fit the data using `rpart`. We can see the initial complexity parameter $\alpha$ (`cp`) to a low value (so almost no pruning occurs and we get a large tree). It will then use the weakest-link pruning we described before. In particular, as $\alpha$ increases, the tree which minimises the penalised loss function is constant until we find jump points. This occurs until we have pruned off everything and are left with the root node only. `rpart` intelligently does this for us, in a very user-friendly way.
 
-Since `education` and `education_num` encode the same information, we drop the `education` column. (In fact, it did not make a big difference to the tree whether we include it or not.)
+Since `education` and `education_num` encode the same information, we drop the `education` column. (In fact, it did not make a big difference to the tree whether we include it or not -- see the appendix.)
 
 ```{r}
 # Load necessary libraries
@@ -307,3 +307,69 @@ Before moving on, we highlight some other measures which were not used here. The
 [4] Agresti, Alan. Categorical data analysis. Vol. 792. John Wiley & Sons, 2012.
 
 [5] He, Haibo, and Edwardo A. Garcia. "Learning from imbalanced data." IEEE Transactions on knowledge and data engineering 21.9 (2009): 1263-1284.
+
+# Appendix
+
+## An Investigation of Robustness
+
+We drop the `education` variable in the above analysis. In the code below, we show that the results are nearly unchanged whether or not it is there, as the information is already encoded in `education_num`.
+
+```{r}
+# Create a function to fit a model and return cross-validated error and cptable
+get_cv_error <- function(formula, train_data) {
+  fit <- rpart(formula, data = train_data, method = "class", control = rpart.control(cp = 1e-6))
+  
+  # Get the best (lowest) cross-validated error from the cptable
+  min_xerror <- min(fit$cptable[,"xerror"])
+  
+  # Return the fitted model and cross-validated error table (cptable)
+  return(list(fit = fit, min_xerror = min_xerror, cptable = fit$cptable))
+}
+
+# Model 1: Using both "education" and "education_num"
+cv_error_with_education <- get_cv_error(income ~ ., train_data)
+
+# Model 2: Dropping the "education" variable, using only "education_num"
+train_data_no_education <- train_data[, !names(train_data) %in% "education"]
+cv_error_no_education <- get_cv_error(income ~ ., train_data_no_education)
+
+# Print the best cross-validated errors for both models
+cat("\nBest Cross-validated Error (with education):", cv_error_with_education$min_xerror)
+cat("\nBest Cross-validated Error (without education):", cv_error_no_education$min_xerror)
+
+# Create data frames from the cptable of both models
+data_with_education <- data.frame(CP = cv_error_with_education$cptable[,"CP"], 
+                                  xerror = cv_error_with_education$cptable[,"xerror"], 
+                                  xstd = cv_error_with_education$cptable[,"xstd"])
+
+data_no_education <- data.frame(CP = cv_error_no_education$cptable[,"CP"], 
+                                xerror = cv_error_no_education$cptable[,"xerror"], 
+                                xstd = cv_error_no_education$cptable[,"xstd"])
+
+# Combine the data for both models, adding a column to distinguish between them
+data_with_education$model <- "With Education"
+data_no_education$model <- "Without Education"
+
+combined_data <- rbind(
+  data_with_education, 
+  data_no_education
+)
+
+# Plot the combined cross-validated error curves for both models
+ggplot(combined_data, aes(x = CP, y = xerror, color = model, shape = model)) +
+  geom_line() +  
+  geom_point(size = 3) +  
+  geom_ribbon(data = data_with_education, aes(x = CP, ymin = xerror - xstd, ymax = xerror + xstd), 
+              fill = "red", alpha = 0.3, inherit.aes = FALSE) +  
+  geom_ribbon(data = data_no_education, aes(x = CP, ymin = xerror - xstd, ymax = xerror + xstd), 
+              fill = "blue", alpha = 0.3, inherit.aes = FALSE) +
+  scale_x_log10() +  
+  labs(title = "CV Error vs Alpha (With and Without Education)", 
+       x = expression(alpha ~ "(log scale)"), 
+       y = "Cross-validated error") +
+  theme_minimal() +
+  scale_shape_manual(values = c("With Education" = 4, "Without Education" = 1)) +  # 'x' for one, '.' for other
+  scale_color_manual(values = c("With Education" = "blue", "Without Education" = "black"))
+
+
+```
