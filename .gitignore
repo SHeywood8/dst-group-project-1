@@ -8,3 +8,11 @@ VivekP/.ipynb_checkpoints/03-IncomeDataEDACHECK2.2.3-checkpoint.ipynb
 .vscode/settings.json
 VivekP/.ipynb_checkpoints/04-02-Modelling-checkpoint.ipynb
 VivekP/.ipynb_checkpoints/DataSplit_ForGroupMembers-checkpoint.ipynb
+VivekP/X_test.csv
+VivekP/X_train_smote.csv
+VivekP/X_train.csv
+VivekP/y_test.csv
+VivekP/y_train_smote.csv
+VivekP/y_train.csv
+VivekP/fit_model.RData
+VivekP/.ipynb_checkpoints/DataSplit_CodeToLoadData-checkpoint.ipynb
