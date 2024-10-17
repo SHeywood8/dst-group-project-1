@@ -1,54 +1,52 @@
+# Load necessary packages
+library(rpart)
+library(caret)  # For confusion matrix and precision/recall calculations
+library(pROC)   # For ROC curve
+
 # Load the training and test datasets
 X_train <- read.csv("data/X_train.csv", row.names = 1)  # Set the first column as row names
 y_train <- read.csv("data/y_train.csv", row.names = 1)  # Set the first column as row names
 X_test <- read.csv("data/X_test.csv", row.names = 1)    # Set the first column as row names
 y_test <- read.csv("data/y_test.csv", row.names = 1)    # Set the first column as row names
 
-# Check the first few rows of each dataset
-head(X_train)
-head(y_train)
-head(X_test)
-head(y_test)
-
 # Combine X_train and y_train into one data frame for rpart
 train_data <- cbind(X_train, y_train)
-
-# Load the necessary package
-library(rpart)
-
-# Replace "?" with NA
-train_data[train_data == "?"] <- NA
 
 # Fit the classification tree using rpart with NA handling
 fit <- rpart(income ~ ., data = train_data, method = "class", control = rpart.control(cp = 1e-6))
 
-# Get the cost-complexity pruning table
-cptable <- fit$cptable
+# Save the fitted model 'fit' to a file called 'fit_model.RData'
+save(fit, file = "fit_model.RData")
 
-# Plot the predicted cross-validated error (xerror) against the cp (alpha) values on a log scale
-plot(cptable[,"CP"], cptable[,"xerror"], type = "b", 
-     xlab = expression(alpha ~ "(cp values, log scale)"), 
-     ylab = "Cross-validated error (xerror)", 
-     main = "Predicted Error vs Alpha (Cost-Complexity Parameter)",
-     col = "blue", pch = 19, log = "x")  # Set log scale for x-axis
+# Load the fitted model
+load("fit_model.RData")
 
-# Add error bars representing xstd (standard deviation of the error)
-arrows(cptable[,"CP"], cptable[,"xerror"] - cptable[,"xstd"], 
-       cptable[,"CP"], cptable[,"xerror"] + cptable[,"xstd"], 
-       angle = 90, code = 3, length = 0.05, col = "red")
+# Make predictions on the test set
+predictions <- predict(fit, newdata = X_test, type = "class")
+pred_probs <- predict(fit, newdata = X_test, type = "prob")[,2]  # Probability of the positive class
 
-# Get surrogate splits information
-surrogate_info <- fit$frame[fit$frame$var != "<leaf>", c("var", "n", "ncompete", "nsurrogate")]
-surrogate_info <- surrogate_info[surrogate_info$nsurrogate > 0, ]  # Filter for nodes with surrogates
+# Create a confusion matrix
+confusion_mat <- confusionMatrix(as.factor(predictions), as.factor(y_test[,1]))
+print(confusion_mat)
 
-# Display the surrogate splits
-print(surrogate_info)
+# Convert predictions and actual values to factors
+predictions_factor <- as.factor(predictions)
+y_test_factor <- as.factor(y_test[, 1])  # Make sure this matches the correct column for your outcome variable
 
-# Optional: Create a more readable format for surrogate splits
-for (i in seq_len(nrow(surrogate_info))) {
-  cat("Node:", i, "\n")
-  cat("Primary Split Variable:", surrogate_info$var[i], "\n")
-  cat("Number of Observations:", surrogate_info$n[i], "\n")
-  cat("Number of Competitors:", surrogate_info$ncompete[i], "\n")
-  cat("Number of Surrogates:", surrogate_info$nsurrogate[i], "\n\n")
-}
+# Extract precision, recall, and F1-score
+precision <- posPredValue(predictions_factor, y_test_factor, positive = ">50K")  # Assuming '1' is the positive class
+recall <- sensitivity(predictions_factor, y_test_factor, positive = ">50K")
+F1 <- (2 * precision * recall) / (precision + recall)
+
+# Print the metrics
+cat("Precision:", precision, "\n")
+cat("Recall:", recall, "\n")
+cat("F1 Score:", F1, "\n")
+
+# Create ROC curve
+roc_curve <- roc(y_test_factor, pred_probs, levels = c("<=50K", ">50K"))
+
+# Plot the ROC curve
+plot(roc_curve, main = "ROC Curve", col = "blue")
+auc_value <- auc(roc_curve)
+cat("AUC:", auc_value, "\n")  # Print AUC value
