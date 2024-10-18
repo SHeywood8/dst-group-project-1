@@ -1,18 +1,37 @@
 ---
 title: "Surrogate Splits"
-output: html_document
+output:
+  pdf_document:
+    toc: true
+    number_sections: true
+  bookdown::html_document2:
+    toc: true
+    toc_float: true
+    highlight: tango
+    code_folding: hide
+    number_sections: true
+    collapsed: true
+  bookdown::pdf_book:
+    keep_tex: true
+header-includes: \usepackage{fvextra} \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+urlcolor: blue
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 # Preamble
 
 In this section and the following ones, we will look at methods to treat missingness and imbalance. In order to see how we are doing, we will also be looking at performance metrics. We begin with looking at surrogate splits.
 
-# Introduction to Surrogate Splits
+# Introduction
 
 Surrogate splits are a method for tree-based methods to deal with missing data. The idea of **surrogate** splits is as the name suggests. The term `surrogate` means
 
 ```
-Definitions from Oxford Languages: a substitute [...]. (Synonyms included: proxy, replacement, stand-in.)
+Definitions from Oxford Languages: 
+a substitute [...]. (Synonyms included: proxy, replacement, stand-in.)
 ```
 
 Recall that in our case, we use univariate splits. So we find the splits on all variables $x_i$, and then choose the best split from those (computing "best" using only the complete cases). The problem is that if we choose a split involving a variable $x_m$, then we cannot split the data for which $x_m$ is missing. Surrogate splits provides a remedy for this.
@@ -25,15 +44,28 @@ This is similar to the process of replacing a missing value in a linear model by
 
 Surrogate splits are implemented natively in `rpart`, which we use below. 
 
-# Loading Data
+# Prerequisites
 
-We load the data using the code below. 
+We load the data and required packages using the code below. 
 
 ```{r}
-# Load necessary packages
-library(rpart)
-library(caret)  # For confusion matrix and precision/recall calculations
-library(pROC)   # For ROC curve
+# List of required packages
+packages <- c("rpart", "caret", "pROC", "ggplot2", "dplyr")
+
+# Install missing packages
+install_if_missing <- function(pkg) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg, dependencies = TRUE)
+  }
+}
+
+# Install any missing packages
+invisible(lapply(packages, install_if_missing))
+
+# Load all packages
+invisible(lapply(packages, library, character.only = TRUE))
+
+
 
 # Get the current working directory
 current_dir <- getwd()
@@ -61,13 +93,9 @@ train_data <- cbind(X_train, y_train)
 
 We fit the data using `rpart`. We can see the initial complexity parameter $\alpha$ (`cp`) to a low value (so almost no pruning occurs and we get a large tree). It will then use the weakest-link pruning we described before. In particular, as $\alpha$ increases, the tree which minimises the penalised loss function is constant until we find jump points. This occurs until we have pruned off everything and are left with the root node only. `rpart` intelligently does this for us, in a very user-friendly way.
 
-Since `education` and `education_num` encode the same information, we drop the `education` column. (In fact, it did not make a big difference to the tree whether we include it or not -- see the appendix.)
+Since `education` and `education_num` encode the same information, we drop the `education` column. (In fact, it did not make a big difference to the tree whether we include it or not -- see the appendix for a sensitivity analysis.)
 
 ```{r}
-# Load necessary libraries
-library(ggplot2)
-library(rpart)
-
 # Drop the "education" column from the training data
 train_data <- train_data[, !names(train_data) %in% "education"]
 
@@ -134,10 +162,6 @@ pruned_tree <- prune(fit, cp = best_cp)
 # Plot the pruned tree
 plot(pruned_tree, uniform = TRUE, main = "Pruned Classification Tree")
 
-# Load necessary libraries
-library(ggplot2)
-library(dplyr)  # For data manipulation
-
 # Extract variable importance from the pruned tree
 variable_importance <- data.frame(Variable = names(pruned_tree$variable.importance),
                                     Importance = pruned_tree$variable.importance)
@@ -164,11 +188,11 @@ ggplot(variable_importance, aes(x = reorder(Variable, Importance), y = Importanc
 
 The results are expected from the EDA we did. In particular, relationship and marital status were closely related, so it makes sense that their importances are about the same. We can see that capital gain is much better at predicting income than capital loss. This again makes sense as we saw that the distributions of capital gain for each income class were markedly different, whereas the distributions of capital loss for each income class were not very different.
 
-## Evaluation of Model
+# Evaluation of Model
 
 It is important to note that the data is imbalanced. Therefore, using accuracy as a performance metric can be misleading. We explore several metrics below and explore how the model performs.
 
-### Confusion Matrix, Specificity, Sensitivity
+## Confusion Matrix, Specificity, Sensitivity
 
 The confusion matrix shows the predicted class against the actual class.
 
@@ -235,17 +259,11 @@ There's a lot to unpack here. We go through each value one by one and provide a 
 In summary, while the model demonstrates strong sensitivity and accuracy in predicting the positive class (<=50K), it struggles with specificity, leading to potential issues with false positives. Improvements could be made by adjusting the decision threshold or experimenting with different algorithms to enhance the model's ability to accurately classify negative instances (>50K).
 
 
-### ROC Curve, F1 Statistic
+## ROC Curve, F1 Statistic
 
 We next look at other measures called the precision, recall and the ROC curve.
 
 ```{r}
-# Load necessary libraries
-library(caret)    # For precision and recall calculations
-library(pROC)     # For ROC curve plotting
-library(ggplot2)  # For ggplot2 plotting
-library(dplyr)    # For data manipulation
-
 # Convert predictions and actual values to factors
 predictions_factor <- as.factor(predictions)
 y_test_factor <- as.factor(y_test[, 1])  # Adjust as needed for the outcome variable

@@ -1,22 +1,65 @@
 ---
-title: "Dealing with Missingness"
-output: html_document
+title: "Other Methods for Dealing with Missingness"
+output:
+  bookdown::html_document2:
+    toc: true
+    toc_float: true
+    highlight: tango
+    code_folding: hide
+    number_sections: true
+    collapsed: true
+  bookdown::pdf_book:
+    keep_tex: true
+  pdf_document:
+    toc: true
+    number_sections: true
+header-includes: \usepackage{fvextra} \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+urlcolor: blue
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
 We will explore other methods of dealing with missingness, and compare them. We will run each method, and then provide a comparison at the end.
+
+## Requirements
+
+We load the required packages with the code below.
+
+```{r}
+# List of required packages
+packages <- c("rpart", "caret", "pROC", "ggplot2", "dplyr")
+
+# Function to check if a package is installed, and install it if it's missing
+install_if_missing <- function(pkg) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg, dependencies = TRUE)
+  }
+}
+
+# Install any missing packages
+invisible(lapply(packages, install_if_missing))
+
+# Load the necessary packages
+lapply(packages, library, character.only = TRUE)
+
+# rpart      - Recursive partitioning for decision trees
+# caret      - For confusion matrix and precision/recall calculations
+# pROC       - For ROC curve
+# ggplot2    - For plotting
+# dplyr      - For data manipulation
+```
+
+# Other Methods to Deal with Missingness
 
 ## Analysis with Missingness Encoded as `?`
 
 This treats missingness as its own category.
 
 ```{r}
-# Load necessary packages
-library(rpart)
-library(caret)  # For confusion matrix and precision/recall calculations
-library(pROC)   # For ROC curve
-library(ggplot2) # For plotting
-library(dplyr)   # For data manipulation
-
 # Get the current working directory
 current_dir <- getwd()
 cat("Current directory:", current_dir, "\n")
@@ -77,18 +120,11 @@ roc_data_model_encoded <- data.frame(
 ```
 
 
-## Complete case analysis
+## Complete Case Analysis
 
 We start with a simple method of dealing with missing data: simply deleting all missing data. This is not really a good strategy here because we have about 50000 observations and 3000 missing some values. This was not considered a negligible amount of missingness, but we will just consider this as a baseline.
 
 ```{r}
-# Load necessary packages
-library(rpart)
-library(caret)  # For confusion matrix and precision/recall calculations
-library(pROC)   # For ROC curve
-library(ggplot2) # For plotting
-library(dplyr)   # For data manipulation
-
 # Remove rows with missing data from the training and test sets
 train_data[train_data == "?"] <- NA
 train_data <- na.omit(train_data)
@@ -130,13 +166,6 @@ We reuse the code from the previous file.
 **NOTE**: We preferred to do this rather than saving the files and loading them as it sometimes led to non-reproducible issues for the other group members.
 
 ```{r loading data, pruning, ROC curve from previous part}
-# Load necessary packages
-library(rpart)
-library(caret)  # For confusion matrix and precision/recall calculations
-library(pROC)   # For ROC curve
-library(ggplot2) # For plotting
-library(dplyr)   # For data manipulation
-
 # NEED TO RELOAD DATA: We deleted some of it before. We preferred to do it this way rather than changing the order
 # of the methods to avoid reloading it. This is because we wanted the simplest methods first.
 
@@ -194,7 +223,9 @@ roc_data_model <- data.frame(
 )
 ```
 
-## Comparing the Performance
+# Comparisons of Performance
+
+We compare the ROC curves obtained from each method.
 
 ```{r}
 # Create the plot for the saved ROC curve
