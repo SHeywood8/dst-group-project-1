@@ -4,4 +4,4 @@ matplotlib
 seaborn
 ucimlrepo
 scikit-learn
-ISLP
+statsmodels
