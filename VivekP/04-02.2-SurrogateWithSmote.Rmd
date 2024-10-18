@@ -98,7 +98,6 @@ roc_data_model <- data.frame(
 
 # Load the saved ROC data
 roc_data_saved <- read.csv("roc_data_no_smote.csv")
-auc(roc_data_saved)
 
 # Ensure the saved data has columns for FPR and TPR
 if (!all(c("FPR", "TPR") %in% colnames(roc_data_saved))) {

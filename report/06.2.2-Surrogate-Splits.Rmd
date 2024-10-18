@@ -1,6 +1,5 @@
 ---
 title: "Surrogate Splits"
-author: "Vivek P."
 output: html_document
 ---
 

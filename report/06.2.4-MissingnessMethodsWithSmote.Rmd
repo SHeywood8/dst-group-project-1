@@ -218,6 +218,6 @@ legend("bottomright", legend = c("ROC Curve (Surrogate Splits)", "ROC Curve (Mis
        col = c("red", "blue", "green"), lwd = 2)
 ```
 
-The results shocked us. The tree was quite robust to the method we chose, and the ROC curves and AUC were almost identical. Note that we have not considered imputation here, as we saw that the performance was not getting better regardless of the method we used, so we postponed the use of imputation to when we consider ensembles.
+The results shocked us. The tree was quite robust to the method we chose, and the ROC curves and AUC were almost identical. 
 
 Having exhausted most of the methods of dealing with missingness we explored, as well as the use of SMOTE to treat imbalance, we moved to considering ensembles.
