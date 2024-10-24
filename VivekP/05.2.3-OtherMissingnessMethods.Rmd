@@ -1,6 +1,11 @@
 ---
 title: "Other Methods for Dealing with Missingness"
 output:
+  pdf_document:
+    toc: true
+    number_sections: true
+  bookdown::pdf_book:
+    keep_tex: true
   bookdown::html_document2:
     toc: true
     toc_float: true
@@ -8,11 +13,6 @@ output:
     code_folding: hide
     number_sections: true
     collapsed: true
-  bookdown::pdf_book:
-    keep_tex: true
-  pdf_document:
-    toc: true
-    number_sections: true
 header-includes: \usepackage{fvextra} \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 urlcolor: blue
 ---
@@ -136,6 +136,7 @@ roc_data_model_encoded <- data.frame(
   TPR = roc_curve_model_encoded$sensitivities         # True Positive Rate
 )
 ```
+The AUC with missing data encoded as `?` was around 0.880. We store the data and view it together with the other methods of dealing with missingness later.
 
 ## Complete Case Analysis
 
@@ -175,6 +176,8 @@ roc_data_model_deleted <- data.frame(
   TPR = roc_curve_model_deleted$sensitivities         # True Positive Rate
 )
 ```
+The AUC with missing data deleted was also around 0.880. We store the data and view it together with the other methods of dealing with missingness later.
+
 ## Imputation
 
 **Imputation** simply refers to filling in a missing value. we will here do single imputations using the mode. 
@@ -261,16 +264,8 @@ roc_data_model_imputed <- data.frame(
   FPR = 1 - roc_curve_model_imputed$specificities,  # False Positive Rate
   TPR = roc_curve_model_imputed$sensitivities         # True Positive Rate
 )
-
-# Optional: Plotting the ROC Curve
-plot(roc_data_model_imputed$FPR, roc_data_model_imputed$TPR, type = "l", col = "blue", lwd = 2,
-     xlim = c(0, 1), ylim = c(0, 1),
-     main = "ROC Curve for Mode Imputed Model",
-     xlab = "False Positive Rate",
-     ylab = "True Positive Rate")
-abline(0, 1, lty = 2, col = "grey")  # Diagonal line for random guessing
 ```
-
+The AUC with missing data deleted was around 0.888. We store the data and view it together with the other methods of dealing with missingness later.
 
 # Comparisons of Performance
 
@@ -312,9 +307,11 @@ write.csv(roc_data_model_encoded, "roc_data/roc_data_model_encoded.csv", row.nam
 write.csv(roc_data_model_imputed, "roc_data/roc_data_model_imputed.csv", row.names = FALSE)
 ```
 
-The results shocked us. The tree was quite robust to the method we chose, and the ROC curves and AUC were almost identical. Having exhausted most of the methods of dealing with missingness we explored, as well as the use of SMOTE to treat imbalance, we moved to considering ensembles.
+The results were surprising. The tree was quite robust to the method we chose, and the ROC curves and AUC were almost identical. However, it looks like using simple imputation may be better overall as it has the highest area under the ROC curve in this case.  Having explored methods to deal with missing data, we now look at the use of SMOTE to deal with imbalance.
 
 # References
 
 [1] Van Buuren, Stef. "Multiple imputation of discrete and continuous data by fully conditional specification." Statistical methods in medical research 16.3 (2007): 219-242.
 [2] Scheffer, Judi. "Dealing with missing data." (2002).
+
+<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>

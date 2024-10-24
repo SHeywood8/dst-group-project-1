@@ -4,6 +4,9 @@ output:
   pdf_document:
     toc: true
     number_sections: true
+  html_document:
+    toc: true
+    df_print: paged
   bookdown::html_document2:
     toc: true
     toc_float: true
@@ -412,3 +415,5 @@ ggplot(combined_data, aes(x = CP, y = xerror, color = model, shape = model)) +
 ```
 
 Since the best models with or without `education` perform similarly, we will not be very fussy about this in later sections.
+
+<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
