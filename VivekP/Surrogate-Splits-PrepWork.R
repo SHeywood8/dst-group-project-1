@@ -12,11 +12,16 @@ y_test <- read.csv("data/y_test.csv", row.names = 1)    # Set the first column a
 # Combine X_train and y_train into one data frame for rpart
 train_data <- cbind(X_train, y_train)
 
-# Fit the classification tree using rpart with NA handling
-fit <- rpart(income ~ ., data = train_data, method = "class", control = rpart.control(cp = 1e-6))
-
-# Save the fitted model 'fit' to a file called 'fit_model.RData'
-save(fit, file = "fit_model.RData")
+# Check if the fitted model file exists
+if (!file.exists("fit_model.RData")) {
+  # Fit the classification tree using rpart with NA handling
+  fit <- rpart(income ~ ., data = train_data, method = "class", control = rpart.control(cp = 1e-6))
+  
+  # Save the fitted model 'fit' to a file called 'fit_model.RData'
+  save(fit, file = "fit_model.RData")
+} else {
+  cat("Model has already been fitted and saved as 'fit_model.RData'.\n")
+}
 
 # Load the fitted model
 load("fit_model.RData")
