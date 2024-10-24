@@ -1,5 +1,11 @@
 # Data Science Toolbox Assessed Coursework 1: Supervised Prediction
 
+- individual conclusions
+- bring conclusions together on Monday
+- add ROC curves to conclusion on Monday
+- make all notebooks look the same
+
+
 ## Project Group
 
 - Vivek Paligadu (mn21313)
