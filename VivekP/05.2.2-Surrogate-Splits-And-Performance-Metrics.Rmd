@@ -51,7 +51,7 @@ Surrogate splits are implemented natively in `rpart`, which we use below.
 
 We load the data and required packages using the code below. 
 
-```{r}
+```{r, echo=T, results='hide'}
 # List of required packages
 packages <- c("rpart", "caret", "pROC", "ggplot2", "dplyr")
 
@@ -97,6 +97,8 @@ We fit the data using `rpart`. We can see the initial complexity parameter $\alp
 Since `education` and `education_num` encode the same information, we drop the `education` column. (In fact, it did not make a big difference to the tree whether we include it or not -- see the appendix for a sensitivity analysis.)
 
 ```{r}
+# We did not set a seed, so your results may look slightly different
+
 # Drop the "education" column from the training data
 train_data <- train_data[, !names(train_data) %in% "education"]
 

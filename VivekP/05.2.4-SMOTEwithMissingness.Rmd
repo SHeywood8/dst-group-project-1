@@ -39,9 +39,9 @@ We discuss one sampling method called the \textit{Synthetic Minority Oversamplin
 
 # Prerequisites
 
-We load the SMOTE data using the code below. 
+We load the SMOTE data using the code below.
 
-```{r}
+```{r, echo=T, results='hide'}
 # List of required packages
 packages <- c("rpart", "caret", "pROC", "ggplot2", "dplyr")
 

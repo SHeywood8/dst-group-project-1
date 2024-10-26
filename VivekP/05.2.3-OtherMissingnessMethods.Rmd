@@ -1,11 +1,11 @@
 ---
 title: "Other Methods for Dealing with Missingness"
 output:
+  bookdown::pdf_book:
+    keep_tex: true
   pdf_document:
     toc: true
     number_sections: true
-  bookdown::pdf_book:
-    keep_tex: true
   bookdown::html_document2:
     toc: true
     toc_float: true
@@ -29,7 +29,7 @@ We have explored surrogate splits in the previous section. This did not provide 
 
 We load the required packages with the code below.
 
-```{r}
+```{r, echo=T, results='hide'}
 # List of required packages
 packages <- c("rpart", "caret", "pROC", "ggplot2", "dplyr", "readr")
 
@@ -55,7 +55,7 @@ lapply(packages, library, character.only = TRUE)
 
 We load the data below.
 
-```{r}
+```{r, echo=T, results='hide'}
 # Data loading
 # Get the current working directory
 current_dir <- getwd()
@@ -92,8 +92,11 @@ roc_data_model_surrogate <- read_csv("roc_data/roc_data_model_surrogate.csv")
 # Other Methods to Deal with Missingness
 
 Besides surrogate splits, there are several other methods to deal with missingness. As mentioned in Section 5.2, these are:
+
 - Treating missingness as its own category
+
 - Complete case analysis.
+
 - Imputation.
 
 We now explain each in detail, and explain how they are implemented.
@@ -103,6 +106,8 @@ We now explain each in detail, and explain how they are implemented.
 This treats missingness as its own category. This is particularly easy to implement in our case, since all the missing variables were categorical.
 
 ```{r}
+# We did not set a seed, so you may get slightly different results
+
 # Replace NAs with "?" for both training and test datasets
 train_data[is.na(train_data)] <- "?"
 X_test[is.na(X_test)] <- "?"
