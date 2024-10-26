@@ -1,11 +1,11 @@
 ---
 title: "Other Methods for Dealing with Missingness"
 output:
-  bookdown::pdf_book:
-    keep_tex: true
   pdf_document:
     toc: true
     number_sections: true
+  bookdown::pdf_book:
+    keep_tex: true
   bookdown::html_document2:
     toc: true
     toc_float: true
