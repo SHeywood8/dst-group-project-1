@@ -1,6 +1,11 @@
 ---
 title: "Surrogate Splits with SMOTE"
 output:
+  pdf_document:
+    toc: true
+    number_sections: true
+  bookdown::pdf_book:
+    keep_tex: true
   bookdown::html_document2:
     toc: true
     toc_float: true
@@ -8,11 +13,6 @@ output:
     code_folding: hide
     number_sections: true
     collapsed: true
-  bookdown::pdf_book:
-    keep_tex: true
-  pdf_document:
-    toc: true
-    number_sections: true
 header-includes: \usepackage{fvextra} \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 urlcolor: blue
 ---
@@ -425,7 +425,7 @@ legend("bottomright", legend = c("ROC Curve (Imputed - SMOTE)", "ROC Curve (Exis
 
 ```
 
-We obtain an AUC of about 0.887, compared to around 0.874 before. This is a notable improvement.
+We obtain an AUC of about 0.887, compared to around 0.882 before. This is a minor improvement, and the AUC curves look nearly the same.
 
 # Conclusion
 

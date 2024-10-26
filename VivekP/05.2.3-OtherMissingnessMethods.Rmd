@@ -136,7 +136,7 @@ roc_data_model_encoded <- data.frame(
   TPR = roc_curve_model_encoded$sensitivities         # True Positive Rate
 )
 ```
-The AUC with missing data encoded as `?` was around 0.880. We store the data and view it together with the other methods of dealing with missingness later.
+The AUC with missing data encoded as `?` was around 0.87-0.88. We store the data and view it together with the other methods of dealing with missingness later.
 
 ## Complete Case Analysis
 
@@ -176,7 +176,7 @@ roc_data_model_deleted <- data.frame(
   TPR = roc_curve_model_deleted$sensitivities         # True Positive Rate
 )
 ```
-The AUC with missing data deleted was also around 0.880. We store the data and view it together with the other methods of dealing with missingness later.
+The AUC with missing data deleted was also around 0.88. We store the data and view it together with the other methods of dealing with missingness later.
 
 ## Imputation
 
@@ -265,7 +265,7 @@ roc_data_model_imputed <- data.frame(
   TPR = roc_curve_model_imputed$sensitivities         # True Positive Rate
 )
 ```
-The AUC with missing data deleted was around 0.888. We store the data and view it together with the other methods of dealing with missingness later.
+The AUC with missing data imputed was around 0.888. We store the data and view it together with the other methods of dealing with missingness later.
 
 # Comparisons of Performance
 
@@ -307,11 +307,12 @@ write.csv(roc_data_model_encoded, "roc_data/roc_data_model_encoded.csv", row.nam
 write.csv(roc_data_model_imputed, "roc_data/roc_data_model_imputed.csv", row.names = FALSE)
 ```
 
-The results were surprising. The tree was quite robust to the method we chose, and the ROC curves and AUC were almost identical. However, it looks like using simple imputation may be better overall as it has the highest area under the ROC curve in this case.  Having explored methods to deal with missing data, we now look at the use of SMOTE to deal with imbalance.
+The results were surprising. The tree was quite robust to the method we chose, and the ROC curves and AUC were almost identical (except for single imputation). However, it looks like using single imputation may be better overall as it has the highest area under the ROC curve in this case.  Having explored methods to deal with missing data, we now look at the use of SMOTE to deal with imbalance.
 
 # References
 
 [1] Van Buuren, Stef. "Multiple imputation of discrete and continuous data by fully conditional specification." Statistical methods in medical research 16.3 (2007): 219-242.
+
 [2] Scheffer, Judi. "Dealing with missing data." (2002).
 
 <div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
