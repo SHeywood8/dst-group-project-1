@@ -389,7 +389,8 @@ cat("AUC for Model (Imputed):", auc_value_model_imputed, "\n")
 # Create a data frame for the model's ROC data
 roc_data_model_imputed <- data.frame(
   FPR = 1 - roc_curve_model_imputed$specificities,  # False Positive Rate
-  TPR = roc_curve_model_imputed$sensitivities         # True Positive Rate
+  TPR = roc_curve_model_imputed$sensitivities,        # True Positive Rate
+  AUC = rep(auc_value_model_imputed, length(roc_curve_model_imputed$specificities))  # Repeat AUC for each row
 )
 
 # Load the saved ROC data from the imputed model (for SMOTE)
@@ -423,6 +424,13 @@ abline(0, 1, lty = 2, col = "grey")
 legend("bottomright", legend = c("ROC Curve (Imputed - SMOTE)", "ROC Curve (Existing Model - No SMOTE)"),
        col = c("red", "blue"), lwd = 2)
 
+# Create the 'roc_data' directory if it doesn't exist
+if (!dir.exists("roc_data")) {
+  dir.create("roc_data")
+}
+
+# Save ROC data to a CSV file
+write.csv(roc_data_model_imputed, "roc_data/roc_data_smote_imputed.csv", row.names = FALSE)
 ```
 
 We obtain an AUC of about 0.887, compared to around 0.882 before. This is a minor improvement, and the AUC curves look nearly the same.
