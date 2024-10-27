@@ -22,13 +22,15 @@ The report takes the following structure:
 * 01-Introduction.ipynb
 * 02.1-EDA.ipynb
 * 02.2-DataSplit.ipynb
-* 03-DiscriminantAnalysis.ipynb
+* 03.1-IntroducingDiscriminantAnalysis.ipynb
+* 03.2-ImplementingDiscriminantAnalysis.ipynb
+* 03.3-ImprovingDiscriminantAnalysis.ipynb
 * 04.1-LogisticRegression.ipynb
 * 04.2-AttemptsAtImprovement.ipynb
 * 05.1-DecisionTreeIntro.ipynb
 * 05.2: Missingness and Imbalance. Performance metrics.
 * 05.3: Modelling with Random Forests and Gradient Boosted Trees.
-* 07-Conclusion.ipynb
+* 06-Conclusion.ipynb
 
 ### Requirements:
 
@@ -41,4 +43,3 @@ Our working is shown in our own directories,
 * VivekP
 * SheridanH
 * EliM
-
