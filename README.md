@@ -1,15 +1,11 @@
 # Data Science Toolbox Assessed Coursework 1: Supervised Prediction
 
-- individual conclusions
-- bring conclusions together on Monday
-- add ROC curves to conclusion on Monday
-- make all notebooks look the same
-
 ## Project Group
 
 - Vivek Paligadu (mn21313)
 - Sheridan Heywood (ym21803)
 - Eli Miller (fp21952)
+- Daniel Tse (ng22636)
 
 ## Reading order and requirements
 
@@ -28,8 +24,8 @@ The report takes the following structure:
 * 04.1-LogisticRegression.ipynb
 * 04.2-AttemptsAtImprovement.ipynb
 * 05.1-DecisionTreeIntro.ipynb
-* 05.2: Missingness and Imbalance. Performance metrics.
-* 05.3: Modelling with Random Forests and Gradient Boosted Trees.
+* 05.2: Missingness and Imbalance. Performance metrics (05.2.1-05.2.4).
+* 05.3: Modelling with Random Forests and Gradient Boosted Trees (05.3.1-05.3.2).
 * 06-Conclusion.ipynb
 
 ### Requirements:
