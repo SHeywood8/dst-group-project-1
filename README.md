@@ -7,6 +7,10 @@
 - Eli Miller (fp21952)
 - Daniel Tse (ng22636)
 
+The equity split is 30/30/30/10 between VP, SH, EM, DT. 
+
+(On 28 October, we finished the project as a 3-person project with 38/31/31 split between VP, SH, EM. If the project is marked considering this, please use a snapshot of the repository from this date.)
+
 ## Reading order and requirements
 
 All report content is in the directory:
